@@ -1,1 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ideal Store — Moda feminina e masculina</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,500&family=Work+Sans:wght@400;500;600&display=swap');
+:root{--bg:#1B1A20;--surface:#211F26;--surface-2:#2B2933;--ivory:#F1ECE4;--wine:#A8434E;--wine-light:#C4626C;--gold:#C9A86A;--muted:#9C97A0;--line:#3A3742;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ivory);font-family:'Work Sans',sans-serif;line-height:1.5}
+h1,h2,h3,.serif{font-family:'Fraunces',serif;font-weight:600}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font-family:inherit;font-size:inherit}
+.container{max-width:1180px;margin:0 auto;padding:0 28px}
+.view{display:none}.view.active{display:block}
 
+header.site{border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(27,26,32,.93);backdrop-filter:blur(6px);z-index:50}
+.header-row{display:flex;align-items:center;justify-content:space-between;padding:20px 0}
+.logo{font-family:'Fraunces',serif;font-size:1.6rem;font-style:italic;font-weight:600;cursor:pointer}
+.logo span{color:var(--wine-light)}
+nav.main-nav{display:flex;gap:28px}
+nav.main-nav a{font-size:.95rem;color:var(--muted)}
+nav.main-nav a:hover{color:var(--ivory)}
+.header-actions{display:flex;gap:14px;align-items:center}
+.icon-btn{position:relative;font-size:1.15rem;cursor:pointer;border:none;background:none;color:var(--ivory);padding:4px}
+.badge{position:absolute;top:-6px;right:-8px;background:var(--wine);color:#fff;font-size:.65rem;width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 26px;border:1px solid var(--ivory);background:var(--ivory);color:var(--bg);font-weight:500;cursor:pointer;transition:.15s;font-size:.95rem;border-radius:2px}
+.btn:hover{background:transparent;color:var(--ivory)}
+.btn-outline{background:transparent;color:var(--ivory)}
+.btn-outline:hover{background:var(--ivory);color:var(--bg)}
+.btn-wine{background:var(--wine);border-color:var(--wine);color:#fff}
+.btn-wine:hover{background:transparent;color:var(--wine-light);border-color:var(--wine-light)}
+.btn-block{width:100%}
+.btn-sm{padding:9px 16px;font-size:.85rem}
+
+.hero{display:grid;grid-template-columns:1.1fr .9fr;border-bottom:1px solid var(--line)}
+.hero-text{padding:90px 28px 90px 0;display:flex;flex-direction:column;justify-content:center;max-width:520px;margin-left:auto}
+.hero-eyebrow{color:var(--gold);font-size:.9rem;margin-bottom:14px}
+.hero h1{font-size:3.1rem;line-height:1.05;margin:0 0 22px}
+.hero h1 em{color:var(--wine-light)}
+.hero p{color:var(--muted);font-size:1.05rem;margin:0 0 30px;max-width:420px}
+.hero-visual{background:linear-gradient(155deg,#2B2933 0%,#1B1A20 60%,#A8434E 140%);min-height:460px;display:flex;align-items:flex-end;padding:36px}
+.hero-visual .tag{background:var(--ivory);color:var(--bg);padding:10px 16px;font-size:.85rem;font-family:'Fraunces',serif;font-style:italic}
+
+.section{padding:70px 0}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:36px;gap:20px;flex-wrap:wrap}
+.section-head h2{font-size:2rem;margin:0}
+.section-head p{color:var(--muted);margin:6px 0 0}
+.tabs{display:flex;gap:6px;border:1px solid var(--line);border-radius:20px;padding:4px}
+.tabs button{border:none;background:none;color:var(--muted);padding:8px 18px;border-radius:16px;cursor:pointer;font-size:.88rem}
+.tabs button.active{background:var(--ivory);color:var(--bg)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:26px}
+.card{background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column}
+.card-media{aspect-ratio:3/4;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative;overflow:hidden}
+.card-media img{width:100%;height:100%;object-fit:cover}
+.promo-flag{position:absolute;top:10px;left:10px;background:var(--gold);color:var(--bg);font-size:.72rem;padding:4px 9px;font-weight:600;font-family:'Work Sans'}
+.card-body{padding:16px 18px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card-cat{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em}
+.card-name{font-family:'Fraunces',serif;font-size:1.1rem}
+.card-desc{color:var(--muted);font-size:.85rem;flex:1}
+.price-row{display:flex;align-items:baseline;gap:8px;margin:6px 0 12px}
+.price-old{color:var(--muted);text-decoration:line-through;font-size:.85rem}
+.price-now{font-size:1.15rem;color:var(--gold);font-weight:600}
+.price-now.no-promo{color:var(--ivory)}
+.empty-state{color:var(--muted);text-align:center;padding:60px 0;grid-column:1/-1}
+
+.auth-wrap{min-height:calc(100vh - 76px);display:flex;align-items:center;justify-content:center;padding:60px 20px}
+.auth-card{background:var(--surface);border:1px solid var(--line);padding:48px 40px;width:100%;max-width:420px}
+.auth-card h1{font-size:1.9rem;margin:0 0 8px}
+.sub{color:var(--muted);margin:0 0 30px;font-size:.9rem}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:.82rem;color:var(--muted);margin-bottom:7px}
+.field input,.field select,.field textarea{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--ivory);padding:11px 13px;border-radius:2px}
+.field input:focus,.field select:focus,.field textarea:focus{outline:1px solid var(--wine-light);border-color:var(--wine-light)}
+.foot-link{margin-top:22px;text-align:center;font-size:.88rem;color:var(--muted)}
+.foot-link a{color:var(--gold);cursor:pointer}
+.msg{padding:11px 14px;font-size:.85rem;margin-bottom:18px;border-left:3px solid var(--wine);background:rgba(168,67,78,.12)}
+
+.admin-main{padding:40px 28px 80px;max-width:1000px;margin:0 auto}
+.admin-main h1{margin-top:0}
+.form-card{background:var(--surface);border:1px solid var(--line);padding:28px;margin:24px 0 32px;max-width:680px}
+.form-card h3{margin-top:0}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}
+.span2{grid-column:1/-1}
+.table-wrap{overflow-x:auto}
+table.admin-table{width:100%;border-collapse:collapse}
+.admin-table th,.admin-table td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);font-size:.88rem}
+.admin-table th{color:var(--muted);font-weight:500;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em}
+.pill{padding:3px 10px;font-size:.72rem;background:var(--surface-2)}
+.pill.promo{background:var(--gold);color:var(--bg)}
+.action-link{color:var(--wine-light);cursor:pointer;background:none;border:none;font-size:.85rem;padding:0;margin-right:12px}
+
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:90;display:none}
+.overlay.open{display:block}
+.drawer{position:fixed;top:0;right:-420px;width:400px;max-width:100%;height:100%;background:var(--surface);border-left:1px solid var(--line);z-index:91;transition:right .25s ease;display:flex;flex-direction:column}
+.drawer.open{right:0}
+.drawer-head{padding:24px 24px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.drawer-items{padding:16px 24px;overflow-y:auto;flex:1}
+.drawer-item{display:flex;justify-content:space-between;gap:10px;padding:14px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+.drawer-item .rm{color:var(--muted);cursor:pointer;font-size:.78rem}
+.drawer-foot{padding:20px 24px;border-top:1px solid var(--line)}
+.drawer-total{display:flex;justify-content:space-between;margin-bottom:16px;font-family:'Fraunces',serif;font-size:1.15rem}
+footer.site{border-top:1px solid var(--line);padding:40px 0;color:var(--muted);font-size:.85rem;text-align:center}
+
+@media(max-width:820px){
+ .hero{grid-template-columns:1fr}
+ .hero-text{padding:60px 28px;margin:0;max-width:none}
+ .hero-visual{min-height:280px}
+ nav.main-nav{display:none}
+ .form-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="container header-row">
+    <a class="logo" onclick="go('home')">ideal<span>store</span></a>
+    <nav class="main-nav">
+      <a href="#" onclick="go('home');return false">Início</a>
+      <a href="#" onclick="go('home','catalogo');return false">Coleção</a>
+    </nav>
+    <div class="header-actions">
+      <div id="authArea" class="header-actions"></div>
+      <button class="icon-btn" onclick="toggleDrawer(true)" title="Carrinho">🛍️<span class="badge" id="cartBadge">0</span></button>
+    </div>
+  </div>
+</header>
+
+<!-- ========== HOME ========== -->
+<div class="view active" id="view-home">
+  <section class="hero">
+    <div class="hero-text">
+      <div class="hero-eyebrow">Coleção atual</div>
+      <h1>Vestir bem é uma <em>forma de dizer</em> quem você é</h1>
+      <p>Peças femininas e masculinas selecionadas com atenção ao caimento, ao tecido e ao detalhe — para o seu dia a dia e para as ocasiões que pedem mais.</p>
+      <a class="btn" href="#" onclick="go('home','catalogo');return false">Ver coleção</a>
+    </div>
+    <div class="hero-visual"><span class="tag">Feminino · Masculino</span></div>
+  </section>
+  <section class="section" id="catalogo">
+    <div class="container">
+      <div class="section-head">
+        <div><h2>Catálogo</h2><p>Atualizado pela nossa equipe — novidades toda semana.</p></div>
+        <div class="tabs" id="tabs">
+          <button data-cat="todos" class="active">Todos</button>
+          <button data-cat="feminino">Feminino</button>
+          <button data-cat="masculino">Masculino</button>
+        </div>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+  <footer class="site"><div class="container">© 2026 Ideal Store — moda feminina e masculina.</div></footer>
+</div>
+
+<!-- ========== LOGIN ========== -->
+<div class="view" id="view-login">
+  <div class="auth-wrap"><div class="auth-card">
+    <h1 class="serif">Entrar</h1>
+    <p class="sub">Acesse sua conta para acompanhar seus pedidos.</p>
+    <div id="loginMsg"></div>
+    <div class="field"><label>E-mail</label><input type="email" id="lEmail"></div>
+    <div class="field"><label>Senha</label><input type="password" id="lSenha"></div>
+    <button class="btn btn-wine btn-block" onclick="doLogin()">Entrar</button>
+    <div class="foot-link">Ainda não tem conta? <a onclick="go('cadastro')">Cadastre-se</a></div>
+  </div></div>
+</div>
+
+<!-- ========== CADASTRO ========== -->
+<div class="view" id="view-cadastro">
+  <div class="auth-wrap"><div class="auth-card">
+    <h1 class="serif">Criar conta</h1>
+    <p class="sub">Leva menos de um minuto.</p>
+    <div id="cadMsg"></div>
+    <div class="field"><label>Nome completo</label><input type="text" id="cNome"></div>
+    <div class="field"><label>E-mail</label><input type="email" id="cEmail"></div>
+    <div class="field"><label>Senha (mínimo 4 caracteres)</label><input type="password" id="cSenha"></div>
+    <button class="btn btn-wine btn-block" onclick="doCadastro()">Criar conta</button>
+    <div class="foot-link">Já tem conta? <a onclick="go('login')">Entrar</a></div>
+  </div></div>
+</div>
+
+<!-- ========== ADMIN ========== -->
+<div class="view" id="view-admin">
+  <div class="admin-main">
+    <h1 class="serif">Painel do administrador</h1>
+    <p style="color:var(--muted)">Adicione peças, defina a categoria e, se quiser, um preço promocional.</p>
+
+    <div class="form-card">
+      <h3 class="serif" id="formTitle">Novo produto</h3>
+      <input type="hidden" id="editId">
+      <div class="form-grid">
+        <div class="field"><label>Nome</label><input type="text" id="fNome" placeholder="Ex: Camisa Linho Branca"></div>
+        <div class="field"><label>Categoria</label>
+          <select id="fCategoria"><option value="feminino">Feminino</option><option value="masculino">Masculino</option></select></div>
+        <div class="field"><label>Preço (R$)</label><input type="number" step="0.01" id="fPreco" placeholder="199.90"></div>
+        <div class="field"><label>Preço promocional (opcional)</label><input type="number" step="0.01" id="fPromo" placeholder="Vazio = sem promoção"></div>
+        <div class="field span2"><label>URL da imagem (opcional)</label><input type="text" id="fImagem" placeholder="https://..."></div>
+        <div class="field span2"><label>Descrição curta</label><textarea id="fDescricao" rows="2"></textarea></div>
+      </div>
+      <button class="btn btn-wine" onclick="salvarProduto()">Salvar produto</button>
+      <button class="btn btn-outline" id="cancelEdit" onclick="resetForm()" style="display:none">Cancelar edição</button>
+    </div>
+
+    <div class="table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>Produto</th><th>Categoria</th><th>Preço</th><th>Promoção</th><th></th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ========== CARRINHO ========== -->
+<div class="overlay" id="overlay" onclick="toggleDrawer(false)"></div>
+<aside class="drawer" id="cartDrawer">
+  <div class="drawer-head"><strong class="serif">Seu carrinho</strong><button class="icon-btn" onclick="toggleDrawer(false)">✕</button></div>
+  <div class="drawer-items" id="drawerItems"></div>
+  <div class="drawer-foot">
+    <div class="drawer-total"><span>Total</span><span id="drawerTotal">R$ 0,00</span></div>
+    <a id="checkoutBtn" href="#" target="_blank" class="btn btn-wine btn-block">Finalizar pelo WhatsApp</a>
+  </div>
+</aside>
+
+<script>
+/* ===== CONFIGURAÇÕES — troque antes de publicar ===== */
+const ADMIN = { email:'admin@idealstore.com', senha:'admin123', nome:'Administração' };
+const WHATSAPP_NUMERO = '5500000000000'; // código do país + DDD + número
+
+/* ===== Dados (localStorage) ===== */
+const K = { USERS:'ideal_users', SESSION:'ideal_session', PRODUCTS:'ideal_products', CART:'ideal_cart' };
+const read = (k,d) => { try{ return JSON.parse(localStorage.getItem(k)) ?? d; }catch(e){ return d; } };
+const write = (k,v) => localStorage.setItem(k, JSON.stringify(v));
+const uid = () => 'p_' + Math.random().toString(36).slice(2,10);
+const fmt = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+if(!localStorage.getItem(K.PRODUCTS)){
+  write(K.PRODUCTS,[
+    {id:uid(),nome:'Vestido Linho Areia',categoria:'feminino',preco:279.9,promo:null,emoji:'👗',descricao:'Linho leve, caimento solto, ideal para o dia a dia.'},
+    {id:uid(),nome:'Blazer Alfaiataria Vinho',categoria:'feminino',preco:349.9,promo:279.9,emoji:'🧥',descricao:'Corte reto, forro completo, botão duplo.'},
+    {id:uid(),nome:'Camisa Social Slim',categoria:'masculino',preco:189.9,promo:null,emoji:'👔',descricao:'Tricoline premium, punho ajustável.'},
+    {id:uid(),nome:'Calça Alfaiataria Grafite',categoria:'masculino',preco:229.9,promo:169.9,emoji:'👖',descricao:'Modelagem reta, tecido com leve elastano.'},
+    {id:uid(),nome:'Trench Coat Clássico',categoria:'feminino',preco:459.9,promo:null,emoji:'🧥',descricao:'Impermeável, cinto de amarrar, forro xadrez.'},
+    {id:uid(),nome:'Suéter Gola Careca',categoria:'masculino',preco:159.9,promo:null,emoji:'🧶',descricao:'Tricô fino para looks de meia-estação.'}
+  ]);
+}
+const getProducts = () => read(K.PRODUCTS,[]);
+const getSession = () => read(K.SESSION,null);
+
+/* ===== Navegação entre telas ===== */
+function go(view, anchor){
+  if(view==='admin' && !(getSession()?.isAdmin)){ view='login'; }
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+view).classList.add('active');
+  if(view==='admin') renderTable();
+  if(view==='home') renderGrid();
+  window.scrollTo(0,0);
+  if(anchor) setTimeout(()=>document.getElementById(anchor)?.scrollIntoView({behavior:'smooth'}),30);
+}
+
+/* ===== Autenticação ===== */
+function renderAuthArea(){
+  const s = getSession(), el = document.getElementById('authArea');
+  if(!s){ el.innerHTML = `<button class="btn btn-sm btn-outline" onclick="go('login')">Entrar</button>`; return; }
+  el.innerHTML = (s.isAdmin
+    ? `<button class="btn btn-sm btn-outline" onclick="go('admin')">Painel admin</button>`
+    : `<span style="color:var(--muted);font-size:.85rem">Olá, ${esc(s.nome.split(' ')[0])}</span>`)
+    + `<button class="icon-btn" title="Sair" onclick="logout()">⎋</button>`;
+}
+function logout(){ localStorage.removeItem(K.SESSION); renderAuthArea(); go('home'); }
+
+function doCadastro(){
+  const nome = cNome.value.trim(), email = cEmail.value.trim().toLowerCase(), senha = cSenha.value;
+  const show = m => cadMsg.innerHTML = `<div class="msg">${m}</div>`;
+  if(!nome || !email || senha.length<4) return show('Preencha nome, e-mail e uma senha de no mínimo 4 caracteres.');
+  if(email===ADMIN.email) return show('Este e-mail é reservado.');
+  const users = read(K.USERS,[]);
+  if(users.some(u=>u.email===email)) return show('Já existe uma conta com este e-mail.');
+  users.push({nome,email,senha}); write(K.USERS,users);
+  write(K.SESSION,{email,nome,isAdmin:false});
+  cNome.value=cEmail.value=cSenha.value=''; cadMsg.innerHTML='';
+  renderAuthArea(); go('home');
+}
+function doLogin(){
+  const email = lEmail.value.trim().toLowerCase(), senha = lSenha.value;
+  if(email===ADMIN.email && senha===ADMIN.senha){
+    write(K.SESSION,{email,nome:ADMIN.nome,isAdmin:true});
+    lEmail.value=lSenha.value=''; loginMsg.innerHTML='';
+    renderAuthArea(); return go('admin');
+  }
+  const u = read(K.USERS,[]).find(u=>u.email===email && u.senha===senha);
+  if(!u){ loginMsg.innerHTML = '<div class="msg">E-mail ou senha incorretos.</div>'; return; }
+  write(K.SESSION,{email:u.email,nome:u.nome,isAdmin:false});
+  lEmail.value=lSenha.value=''; loginMsg.innerHTML='';
+  renderAuthArea(); go('home');
+}
+
+/* ===== Vitrine ===== */
+let filtro = 'todos';
+function renderGrid(){
+  const lista = getProducts().filter(p => filtro==='todos' || p.categoria===filtro);
+  grid.innerHTML = lista.length ? lista.map(p=>`
+    <div class="card">
+      <div class="card-media">
+        ${p.promo ? '<span class="promo-flag">Promoção</span>' : ''}
+        ${p.imagem ? `<img src="${esc(p.imagem)}" alt="${esc(p.nome)}">` : (p.emoji||'🛍️')}
+      </div>
+      <div class="card-body">
+        <span class="card-cat">${esc(p.categoria)}</span>
+        <span class="card-name">${esc(p.nome)}</span>
+        <span class="card-desc">${esc(p.descricao)}</span>
+        <div class="price-row">${p.promo
+          ? `<span class="price-old">${fmt(p.preco)}</span><span class="price-now">${fmt(p.promo)}</span>`
+          : `<span class="price-now no-promo">${fmt(p.preco)}</span>`}</div>
+        <button class="btn btn-sm btn-outline" onclick="addToCart('${p.id}')">Adicionar ao carrinho</button>
+      </div>
+    </div>`).join('') : '<div class="empty-state">Nenhum produto nesta categoria ainda.</div>';
+}
+document.querySelectorAll('#tabs button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); filtro=b.dataset.cat; renderGrid();
+}));
+
+/* ===== Carrinho ===== */
+function addToCart(id){
+  const cart = read(K.CART,[]), it = cart.find(i=>i.id===id);
+  it ? it.qtd++ : cart.push({id,qtd:1});
+  write(K.CART,cart); renderCart();
+}
+function removeFromCart(id){ write(K.CART, read(K.CART,[]).filter(i=>i.id!==id)); renderCart(); }
+function toggleDrawer(open){ overlay.classList.toggle('open',open); cartDrawer.classList.toggle('open',open); }
+function renderCart(){
+  const cart = read(K.CART,[]), prods = getProducts();
+  const itens = cart.map(i=>({i,p:prods.find(p=>p.id===i.id)})).filter(x=>x.p);
+  cartBadge.textContent = itens.reduce((a,x)=>a+x.i.qtd,0);
+  drawerItems.innerHTML = itens.length ? itens.map(({i,p})=>`
+    <div class="drawer-item">
+      <div>${p.emoji||'🛍️'} ${esc(p.nome)}<br><span style="color:var(--muted)">Qtd: ${i.qtd} · ${fmt(p.promo ?? p.preco)}</span></div>
+      <span class="rm" onclick="removeFromCart('${p.id}')">remover</span>
+    </div>`).join('') : '<p style="color:var(--muted)">Seu carrinho está vazio.</p>';
+  drawerTotal.textContent = fmt(itens.reduce((a,x)=>a+(x.p.promo ?? x.p.preco)*x.i.qtd,0));
+  const resumo = itens.map(x=>`${x.i.qtd}x ${x.p.nome}`).join(', ');
+  checkoutBtn.href = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent('Olá! Quero finalizar este pedido na Ideal Store: '+resumo)}`;
+  checkoutBtn.style.pointerEvents = itens.length ? 'auto':'none';
+  checkoutBtn.style.opacity = itens.length ? '1':'.4';
+}
+
+/* ===== Admin ===== */
+function renderTable(){
+  const lista = getProducts();
+  tbody.innerHTML = lista.length ? lista.map(p=>`
+    <tr>
+      <td>${p.imagem?'':(p.emoji||'🛍️')+' '}${esc(p.nome)}</td>
+      <td>${esc(p.categoria)}</td>
+      <td>${fmt(p.preco)}</td>
+      <td>${p.promo?`<span class="pill promo">${fmt(p.promo)}</span>`:'<span class="pill">—</span>'}</td>
+      <td><button class="action-link" onclick="editarProduto('${p.id}')">editar</button>
+          <button class="action-link" onclick="excluirProduto('${p.id}')">excluir</button></td>
+    </tr>`).join('') : '<tr><td colspan="5" style="color:var(--muted)">Nenhum produto cadastrado.</td></tr>';
+}
+function resetForm(){
+  fNome.value=fPreco.value=fPromo.value=fImagem.value=fDescricao.value=editId.value='';
+  fCategoria.value='feminino'; formTitle.textContent='Novo produto'; cancelEdit.style.display='none';
+}
+function salvarProduto(){
+  const nome = fNome.value.trim(), preco = parseFloat(fPreco.value);
+  if(!nome || isNaN(preco)) return alert('Preencha ao menos nome e preço.');
+  const dados = { nome, categoria:fCategoria.value, preco, promo: fPromo.value ? parseFloat(fPromo.value) : null,
+                  imagem: fImagem.value.trim() || null, emoji:'🛍️', descricao:fDescricao.value.trim() };
+  const lista = getProducts();
+  if(editId.value){
+    const idx = lista.findIndex(p=>p.id===editId.value);
+    if(idx>-1) lista[idx] = {...lista[idx],...dados};
+  } else lista.push({id:uid(),...dados});
+  write(K.PRODUCTS,lista); resetForm(); renderTable();
+}
+function editarProduto(id){
+  const p = getProducts().find(p=>p.id===id); if(!p) return;
+  fNome.value=p.nome; fCategoria.value=p.categoria; fPreco.value=p.preco; fPromo.value=p.promo ?? '';
+  fImagem.value=p.imagem||''; fDescricao.value=p.descricao||''; editId.value=p.id;
+  formTitle.textContent='Editar produto'; cancelEdit.style.display='inline-flex';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function excluirProduto(id){
+  if(!confirm('Remover este produto da loja?')) return;
+  write(K.PRODUCTS, getProducts().filter(p=>p.id!==id)); renderTable();
+}
+
+/* ===== Início ===== */
+renderAuthArea(); renderCart(); renderGrid();
+</script>
+</body>
+</html>
